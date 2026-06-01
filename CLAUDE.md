@@ -1,0 +1,124 @@
+# CLAUDE.md — stockpile
+
+Claude Code instructions for this monorepo.
+
+## Running the tools
+
+Always run from the **repo root** using `uv run`. Never use `python`
+or `python3` directly.
+
+### Positions tracker (Google Sheets)
+
+```bash
+uv run positions/run_tracker.py
+uv run positions/run_tracker.py --brokerage schwab
+uv run positions/run_tracker.py --csv input/OTHER.csv
+```
+
+Reads `positions/config.toml` (account sheet IDs + CSV paths).
+Credentials at `~/.config/google-sheets-oauth.json`. First run opens
+a browser for OAuth; subsequent runs are silent.
+
+### Cost basis charts
+
+```bash
+uv run cost-basis-charts/run_charts.py
+uv run cost-basis-charts/run_charts.py --symbol SCHW
+```
+
+Reads `cost-basis-charts/config.toml`. Writes HTML (and optional PNG)
+to `cost-basis-charts/output/`.
+
+### Options scanner — web UI (recommended)
+
+```bash
+uv run streamlit run options-scanner/run_app.py
+```
+
+Opens at `http://localhost:8501`. Single Ticker tab or Portfolio tab
+(drag in a brokerage CSV).
+
+### Options scanner — CLI (single ticker)
+
+```bash
+uv run options-scanner/run_scanner.py AMD --calls
+uv run options-scanner/run_scanner.py AMD --puts
+uv run options-scanner/run_scanner.py AMD
+uv run options-scanner/run_scanner.py AMD --roll \
+    --type call --strike 600 --expiration 2026-01-16
+```
+
+### Options scanner — portfolio (brokerage CSV)
+
+```bash
+uv run options-scanner/run_portfolio.py --csv input/schwab028.csv
+uv run options-scanner/run_portfolio.py --csv input/schwab028.csv \
+    --html --tickers AAPL AMD
+```
+
+## Project structure
+
+- `shared/` — pip-installable `stocks-shared` package: CSV parsers,
+  Yahoo Finance helpers, FIFO analysis, Black-Scholes pricing
+- `positions/` — Google Sheets position tracker
+- `cost-basis-charts/` — cost basis vs. price charts
+- `options-scanner/` — options scanner (web UI + CLI)
+- `google-sheets-setup/` — Google Sheets API setup docs
+- `input/` — brokerage CSV exports (gitignored)
+
+## Sibling repo
+
+YouTube production materials and the long-form ideas / research
+parking lot live in a **separate private repo** at
+`../stockpile-private/`:
+
+- `options-scanner/youtube/epN/` — per-episode `script.md`, slide
+  HTML, and image assets (GIMP `.xcf` sources alongside `.png`
+  exports)
+- `IDEAS.md` — speculative project ideas, Schwab-API sketches, and
+  strategy research questions for this codebase
+
+That repo holds no code. When its scripts or IDEAS.md reference files
+like `schwab_auth.py` or `options-scanner/run_scanner.py`, those
+paths are here.
+
+## Keeping the two repos in sync
+
+This repo and `../stockpile-private/` evolve together. Watch the
+boundary and surface what you notice — don't act across it
+unilaterally:
+
+- **Code change here that affects the active episode** — if a
+  feature, UI label, command flag, or behavior shown in the current
+  in-flight `epN/script.md` changes, the script likely needs an
+  update. Check which episode is in active drafting before assuming
+  (ask the user, or look for the most recently edited `script.md`
+  under `../stockpile-private/options-scanner/youtube/`).
+- **Script change in the private repo that contradicts current
+  code** — if a spoken description has drifted from what this code
+  actually does, flag the mismatch rather than guessing which side
+  is right.
+- **Misplaced content** — if something here looks like it belongs in
+  the private repo (a script draft, slide source, idea log) or vice
+  versa (a config file or library that ended up under `youtube/`),
+  call it out.
+
+## Slash commands
+
+Inside a Claude Code session, `/` shows available project commands:
+
+| Command | What it does |
+|---------|--------------|
+| `/scan TICKER [flags]` | Options scanner CLI for one ticker |
+| `/scan-portfolio --csv FILE` | Scan every open position in a CSV |
+| `/scan-ui` | Launch the options scanner web UI |
+| `/charts [--symbol X]` | Generate cost-basis charts |
+| `/positions` | Run the Google Sheets position tracker |
+
+## Environment
+
+- Python 3.12+, managed by `uv`
+- Single shared `.venv/` at repo root (`uv sync` to create/update)
+- `stocks-shared` is installed as an editable local package
+- Brokerage CSVs go in `input/` (gitignored)
+- Config files are gitignored; examples are in `*.toml.example`

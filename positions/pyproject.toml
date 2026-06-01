@@ -1,0 +1,16 @@
+[project]
+name = "positions"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "stocks-shared",
+    "google-auth",
+    "google-auth-oauthlib",
+    "google-api-python-client",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["src"]

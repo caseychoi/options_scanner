@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Config and secrets
+config.toml
+*.json
+!config.toml.example
+.env
+
+# Brokerage CSV exports
+*.csv
+
+# Brokerage statement PDFs
+input/**/*.pdf
+input/*.pdf
+
+# Brokerage CSV backups
+input/**/*.bak
+input/*.bak
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Tool output
+charts/
+output/
+*.html
+# Allow trading-dashboard templates to be tracked
+!trading-dashboard/templates/
+!trading-dashboard/templates/**
+
+# Scanner persistent cache (IV-history SQLite store, etc.)
+cache/
+options-scanner/cache/
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.xcf
+*.gif
+*.svg
+# Per-app branding/static assets get tracked (overrides the blanket *.png etc.)
+!options-scanner/assets/
+!options-scanner/assets/**
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Personal scratch / notes — never tracked
+notes/
+
+# Claude Code — local permission overrides (machine-specific paths and allows)
+.claude/settings.local.json
+# Claude Code — shared settings file (override the blanket *.json rule)
+!.claude/settings.json
