@@ -1,2 +1,8 @@
--e ./shared
--e ./options-scanner
+numpy
+lxml
+streamlit
+tabulate
+yfinance
+schwab-py
+moomoo-api
+pandas

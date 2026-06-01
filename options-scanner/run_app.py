@@ -1,14 +1,22 @@
 """Streamlit web UI for the options scanner."""
 
-import asyncio
 import sys
+from pathlib import Path
+
+# Add the sibling 'shared' directory to sys.path so 'stocks_shared' can be imported
+# natively on platforms like Streamlit Cloud without complex workspace pip installs.
+_repo_root = Path(__file__).resolve().parent.parent
+_shared_path = str(_repo_root / "shared")
+if _shared_path not in sys.path:
+    sys.path.insert(0, _shared_path)
+
+import asyncio
 
 # Streamlit's internal async handling is incompatible with Windows's default
 # ProactorEventLoop on Python 3.12+. Switch to the Selector policy before
 # Streamlit starts its own loop.
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-from pathlib import Path
 
 import streamlit as st
 
