@@ -1,0 +1,8 @@
+-e ../shared
+numpy
+lxml
+streamlit
+tabulate
+yfinance
+schwab-py
+moomoo-api
